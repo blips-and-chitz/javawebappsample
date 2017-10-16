@@ -3,7 +3,6 @@ node {
     if  (env.BRANCH_NAME != 'master') {
         checkout()
         build()
-        staging()
     } // master branch / production
     else {
         checkout()
