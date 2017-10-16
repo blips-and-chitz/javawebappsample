@@ -1,10 +1,10 @@
 node {
-    // not master branch
+    // pull request or feature branch
     if  (env.BRANCH_NAME != 'master') {
         checkout()
         build()
         staging()
-    } // master branch
+    } // master branch / production
     else {
         checkout()
         build()
@@ -24,7 +24,7 @@ def build () {
     }
 }
 
-def production {
+def production () {
     stage('deploy') {
       def resourceGroup = 'tomcatTesting123'
       def webAppName = 'tomcatTesting123'
@@ -35,7 +35,7 @@ def production {
     }
 }
 
-def staging {
+def staging () {
     stage('deploy') {
       def resourceGroup = 'tomcatTesting123'
       def webAppName = 'tomcatTesting123-staging'
