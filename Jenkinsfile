@@ -1,31 +1,30 @@
 node {
-  if (env.BRANCH_NAME != 'master') {
+    // not master branch
+    if  (env.BRANCH_NAME != 'master') {
+        checkout()
+        build()
+        staging()
+    } // master branch
+    else {
+        checkout()
+        build()
+        production()
+    }
+}
+
+def checkout () {
     stage('init') {
       checkout scm
     }
+}
 
+def build () {
     stage('build') {
       sh 'mvn clean package'
     }
+}
 
-    stage('deploy') {
-      def resourceGroup = 'tomcatTesting123'
-      def webAppName = 'tomcatTesting123-staging'
-      sh 'mv target/*.war target/ROOT.war'
-      azureWebAppPublish azureCredentialsId: 'mySp', publishType: 'file',
-                         resourceGroup: resourceGroup, appName: webAppName,
-                         filePath: '*.war', sourceDirectory: 'target', targetDirectory: 'webapps'
-    }
-  }
-  else {
-      stage('init') {
-      checkout scm
-    }
-
-    stage('build') {
-      sh 'mvn clean package'
-    }
-
+def production {
     stage('deploy') {
       def resourceGroup = 'tomcatTesting123'
       def webAppName = 'tomcatTesting123'
@@ -34,5 +33,15 @@ node {
                          resourceGroup: resourceGroup, appName: webAppName,
                          filePath: '*.war', sourceDirectory: 'target', targetDirectory: 'webapps'
     }
-  }
+}
+
+def staging {
+    stage('deploy') {
+      def resourceGroup = 'tomcatTesting123'
+      def webAppName = 'tomcatTesting123-staging'
+      sh 'mv target/*.war target/ROOT.war'
+      azureWebAppPublish azureCredentialsId: 'mySp', publishType: 'file',
+                         resourceGroup: resourceGroup, appName: webAppName,
+                         filePath: '*.war', sourceDirectory: 'target', targetDirectory: 'webapps'
+    }
 }
