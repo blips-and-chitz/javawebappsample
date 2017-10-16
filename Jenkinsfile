@@ -41,7 +41,7 @@ def staging () {
       def webAppName = 'tomcatTesting123'
       sh 'mv target/*.war target/ROOT.war'
       azureWebAppPublish azureCredentialsId: 'mySp', publishType: 'file',
-                         resourceGroup: resourceGroup, appName: webAppName, slot: 'staging',
+                         resourceGroup: resourceGroup, appName: webAppName, slotName: 'staging',
                          filePath: '*.war', sourceDirectory: 'target', targetDirectory: 'webapps'
     }
 }
