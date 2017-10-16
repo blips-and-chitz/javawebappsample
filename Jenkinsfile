@@ -3,6 +3,7 @@ node {
     if  (env.BRANCH_NAME != 'master') {
         checkout()
         build()
+        staging()
     } // master branch / production
     else {
         checkout()
@@ -37,10 +38,10 @@ def production () {
 def staging () {
     stage('deploy') {
       def resourceGroup = 'tomcatTesting123'
-      def webAppName = 'tomcatTesting123-staging'
+      def webAppName = 'tomcatTesting123'
       sh 'mv target/*.war target/ROOT.war'
       azureWebAppPublish azureCredentialsId: 'mySp', publishType: 'file',
-                         resourceGroup: resourceGroup, appName: webAppName,
+                         resourceGroup: resourceGroup, appName: webAppName, slot: 'staging',
                          filePath: '*.war', sourceDirectory: 'target', targetDirectory: 'webapps'
     }
 }
